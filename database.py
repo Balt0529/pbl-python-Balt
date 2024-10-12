@@ -27,3 +27,7 @@ def add_sauna(name,temp_lo,temp_hi,place):
     session.commit()
     session.refresh(db_sauna)
     return db_sauna
+
+def delete_sauna(sauna_name):
+    db_sauna=session.query(Sauna).filter(Sauna.name==sauna_name).delete()
+    return db_sauna

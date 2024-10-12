@@ -1,9 +1,8 @@
 from typing import Union
-from fastapi import FastAPI,Body
+from fastapi import FastAPI,Body,HTTPException
 from pydantic import BaseModel
-from database import read_sauna
+from database import read_sauna,add_sauna,delete_sauna
 from fastapi.middleware.cors import CORSMiddleware
-from models import Sauna
 
 app=FastAPI()
 
@@ -39,6 +38,9 @@ def read_sauna_endpoint():
 
 @app.post("/sauna")
 def post_sauna(name:str=Body(...),temp_lo:int=Body(...),temp_hi:int=Body(...),place:str=Body(...)):
-    sauna=Sauna(name=name,temp_lo=temp_lo,temp_hi=temp_hi,place=place)
-    post_sauna(sauna)
-    return {"message":"OK"}
+    postsauna=add_sauna(name,temp_lo,temp_hi,place)
+    return {"name":postsauna.name,"temp_lo":postsauna.temp_lo,"temp_hi":postsauna.temp_hi,"place":postsauna.place}
+
+@app.delete("/sauna/{sauna_name}")
+def delete_sauna_endpoint(sauna_name:str):
+    return delete_sauna(sauna_name)
